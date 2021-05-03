@@ -26,7 +26,7 @@ dynamic size;
   @override
   Widget build(BuildContext context)
   {
-    size=MediaQuery.of(context).size;
+    size=MediaQuery.of(context).size.height;
     return Scaffold(
       appBar:AppBar(
         title:Text('Movies App'),
@@ -55,48 +55,54 @@ dynamic size;
   }
 
   Widget displayGrid(AsyncSnapshot<ItemModel> snapshot) {
-    final double itemHeight = (size.height) / 2;
-    final double itemWidth = size.width / 2;
+
     return
       Padding(padding:EdgeInsets.all(8),
-      child:GridView.count(
-        crossAxisCount:2,
-        mainAxisSpacing:5,
-        crossAxisSpacing:10,
-        childAspectRatio:MediaQuery.of(context).size.height /1250,
-        children:List.generate(snapshot.data.data.movies.length, (index){
+      child:LayoutBuilder(
+        builder:(BuildContext context,BoxConstraints constraints){
+          double ratio;
+          size<=600?ratio=800:size<=740?ratio=1100:size<=800?ratio=1300:
+          size>=1000 && size<1020?size>1020?ratio=1600:ratio=1500:size>=1200?ratio=1400:ratio=1000;
+          return GridView.count(
+            crossAxisCount:2,
+            mainAxisSpacing:5,
+            crossAxisSpacing:10,
+            childAspectRatio:MediaQuery.of(context).size.height/ratio,
+            children:List.generate(snapshot.data.data.movies.length, (index){
 
-          return GestureDetector(
-            onTap:()=>navigateToMovieDetails(snapshot.data,index),
-            child:Container(
-              color:Colors.black54,
-                child:
-                Column(
-                  crossAxisAlignment:CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height:MediaQuery.of(context).size.height/3.6,
-                      width:MediaQuery.of(context).size.width/2,
-                      child:snapshot.data.data.movies[index].thumbnail!=null?
-                      Image.network(snapshot.data.data.movies[index].thumbnail,
-                        fit:BoxFit.contain,scale:0.4,
-                      //  fit:BoxFit.contain,
-                      ):
-                      Container(color:Colors.grey,),
-                    ),
-                    SizedBox(height:4,),
-                    Text(' Name: '+snapshot.data.data.movies[index].name,style:TextStyle(fontSize:14,
-                    color:Colors.white),),
-                    Text(' Year: '+snapshot.data.data.movies[index].year,style:TextStyle(fontSize:14,
-                        color:Colors.white),)
+              return GestureDetector(
+                onTap:()=>navigateToMovieDetails(snapshot.data,index),
+                child:Container(
+                    color:Colors.black54,
+                    child:
+                    Column(
+                      crossAxisAlignment:CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height:MediaQuery.of(context).size.height/3.6,
+                          width:MediaQuery.of(context).size.width/2,
+                          child:snapshot.data.data.movies[index].thumbnail!=null?
+                          Image.network(snapshot.data.data.movies[index].thumbnail,
+                            fit:BoxFit.contain,scale:0.4,
+                            //  fit:BoxFit.contain,  // make full width uncomment this
+                          ):
+                          Container(color:Colors.grey,),
+                        ),
+                        SizedBox(height:4,),
+                        Text(' Name: '+snapshot.data.data.movies[index].name,style:TextStyle(fontSize:14,
+                            color:Colors.white),),
+                        Text(' Year: '+snapshot.data.data.movies[index].year,style:TextStyle(fontSize:14,
+                            color:Colors.white),)
 
-                  ],
-                )
-              /*Image.network(itemModel.data.movies[index].thumbnail,fit:BoxFit.cover,),*/
-            ),
+                      ],
+                    )
+                  /*Image.network(itemModel.data.movies[index].thumbnail,fit:BoxFit.cover,),*/
+                ),
+              );
+            }),
           );
-        }),
-      ),
+        },
+      )
       );
   }
 
