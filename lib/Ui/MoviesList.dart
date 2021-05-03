@@ -61,7 +61,7 @@ dynamic size;
       child:LayoutBuilder(
         builder:(BuildContext context,BoxConstraints constraints){
           double ratio;
-          size<=600?ratio=800:size<=740?ratio=1100:size<=800?ratio=1300:
+          size<=600?ratio=800:size<=740?ratio=1100:size<=850?ratio=1260:
           size>=1000 && size<1020?size>1020?ratio=1600:ratio=1500:size>=1200?ratio=1400:ratio=1000;
           return GridView.count(
             crossAxisCount:2,
